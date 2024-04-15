@@ -2,8 +2,8 @@ using System;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 using ContosoPizza.API.Data;
 using ContosoPizza.API.Models;
@@ -15,9 +15,9 @@ namespace ContosoPizza.API;
 
 public class Program
 {
-    public static void Main()
+    public static void Main(string[] args)
     {
-        WebApplicationBuilder builder = WebApplication.CreateBuilder();
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers();
 
@@ -28,7 +28,6 @@ public class Program
         builder.Services.AddScoped<IGenericService<Topping>, GenericService<Topping>>();
 
         string? connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
-
         builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connectionString));
 
         WebApplication app = builder.Build();
@@ -38,6 +37,7 @@ public class Program
 
         if (app.Environment.IsDevelopment())
             app.CreateDummyDatabase();
+
         app.MapControllers();
 
         app.Run();
